@@ -1,6 +1,7 @@
 from os import system
 import subprocess
 import time
+import psutil
 from fastapi import FastAPI, HTTPException
 app = FastAPI()
 
@@ -13,10 +14,10 @@ proccess = '1'
 def start_process() :
     global proccess
     proccess
+    pid = int(proccess)
     tmp = subprocess.Popen(['systemctl', 'status', proccess])
-    if proccess is not None and tmp.returncode == 0:
+    if tmp.returncode is None and psutil.pid_exists(pid):
         print("Process already running")
     else :
         print('Proccess not started')
-        print('\n',tmp.returncode)
 start_process()

@@ -6,7 +6,7 @@ from fastapi import FastAPI, HTTPException
 app = FastAPI()
 
 proccess = None
-proccess = 'telegram'#пишем сюда pid для проверки
+proccess = 'pager'#пишем сюда pid для проверки
 
 # tmp = subprocess.Popen(['systemctl', 'status', proccess])
 # print(tmp.args)
@@ -33,7 +33,8 @@ def stop_proccess() :
     global proccess
     pid = get_pid()
     if psutil.pid_exists(pid):
-        subprocess.call(['kill',str(pid)])
+        subprocess.run(['sudo', 'systemctl', 'stop', proccess])
+        print(f"{proccess} stopted")
     else:
         print('Proccess not started')
 # stop_proccess()
@@ -41,9 +42,11 @@ def stop_proccess() :
 def start_proccess():
     global proccess
     pid = get_pid()
-    if psutil.pid_exists(pid) == 0 :
-        subprocess.run(["kill", "-CONT", pid])  # здесь можно заменить команду на запуск нужного процесса
-        print(f"Процесс {proccess} запущен")
+    if pid is not None:
+        subprocess.call(['systemd-run', '--unit='+proccess, '--scope', 'myprocess'])
+        status_proccess()
+        print(f'{proccess} started')
     else :
-        print(f"Процесс {proccess} не найден")
+        print(f'{proccess} running')
+
 start_proccess()

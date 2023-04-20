@@ -6,7 +6,7 @@ from fastapi import FastAPI, HTTPException
 app = FastAPI()
 
 proccess = None
-proccess = '179188'#пишем сюда pid для проверки
+proccess = '300000'#пишем сюда pid для проверки
 
 # tmp = subprocess.Popen(['systemctl', 'status', proccess])
 # print(tmp.args)
@@ -25,5 +25,8 @@ start_process()
 def stop_process() :
     global proccess
     pid = int(proccess)
-    subprocess.call(['kill',str(pid)])
+    if psutil.pid_exists(pid):
+        subprocess.call(['kill',str(pid)])
+    else:
+        print('Proccess not started')
 stop_process()

@@ -6,7 +6,7 @@ from fastapi import FastAPI, HTTPException
 app = FastAPI()
 
 proccess = None
-proccess = 'pager'#пишем сюда pid для проверки
+proccess = 'zsh'#пишем сюда pid для проверки
 
 # tmp = subprocess.Popen(['systemctl', 'status', proccess])
 # print(tmp.args)
@@ -37,7 +37,7 @@ def stop_proccess() :
         print(f"{proccess} stopted")
     else:
         print('Proccess not started')
-# stop_proccess()
+stop_proccess()
 
 def start_proccess():
     global proccess
@@ -49,4 +49,5 @@ def start_proccess():
     else :
         print(f'{proccess} running')
 
-start_proccess()
+# start_proccess()
+#надо понять, если у меня под одни процессом множество pid, нужно ли валидировать это, или выбирать процесс который имеет один пид

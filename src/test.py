@@ -50,7 +50,7 @@ def start_proccess():
         # subprocess.call(['systemd-run', '--unit='+proccess, '--scope', 'myprocess'])
         # subprocess.call(['killall', proccess])
         # status_proccess()
-        tmp = subprocess.Popen(['ls','-l'])
+        tmp = subprocess.Popen(['ls','-l','test.py'])
         pid = tmp.pid
         print(pid)
     else :

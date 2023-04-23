@@ -12,4 +12,4 @@ COPY text.txt .
 
 COPY . .
 
-CMD [ "python3", "test1.py" ]
+CMD [ "python3", "main.py" ]

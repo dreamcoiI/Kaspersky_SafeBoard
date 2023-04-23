@@ -69,7 +69,7 @@ def start(process_name: str):
     if process_name != "word_count":
         raise HTTPException(status_code=404, detail="Process not found")
     start_process()
-    return {"status": "ok"}
+    return {"status": "start"}
 
 
 @app.post("/api/{process_name}/stop")

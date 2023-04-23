@@ -1,0 +1,4 @@
+This is a sample text file for word count.
+It contains several lines of text,
+with each line consisting of a few words.
+The word count for this file should be 20.

@@ -4,7 +4,11 @@ WORKDIR /app
 
 COPY requirements.txt .
 
-RUN pip3 install --no-cache-dir -r requirements.txt pip install uvicorn
+RUN pip3 install --no-cache-dir -r requirements.txt pip install uvicorn jinja2
+
+COPY word_count.py .
+COPY result.txt .
+COPY text.txt .
 
 COPY . .
 

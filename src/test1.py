@@ -1,6 +1,9 @@
 import subprocess
 import time
-
+import requests
+import os
+import uvicorn
+from pathlib import Path
 from fastapi import FastAPI, HTTPException
 from fastapi.openapi.utils import get_openapi
 from fastapi.responses import HTMLResponse
@@ -13,11 +16,14 @@ app = FastAPI()
 process = None
 
 
+import os
+
 def start_process():
     global process
     if process is not None and process.poll() is None:
         raise HTTPException(status_code=400, detail="Process already running")
-    process = subprocess.Popen(["python", "word_count.py", "text.txt"])
+    path = os.path.abspath(os.path.dirname(__file__))  # получаем абсолютный путь к директории, в которой находится скрипт
+    process = subprocess.Popen(["python", os.path.join(path, "word_count.py"), os.path.join(path, "text.txt"), os.path.join(path, "result.txt")], cwd=path)
 
 
 def stop_process():
@@ -50,9 +56,11 @@ def get_process_result():
         raise HTTPException(status_code=404, detail="Process not found")
     if process.poll() is None:
         raise HTTPException(status_code=400, detail="Process is still running")
-    with open("result.txt") as f:
+    path = os.path.abspath(os.path.dirname(__file__))
+    with open(os.path.join(path, "result.txt")) as f:
         result = f.read()
     return {"result": result}
+
 
 
 @app.post("/api/{process_name}/start")
@@ -85,15 +93,6 @@ def result(process_name: str):
     return get_process_result()
 
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
-
-
-app = FastAPI()
-
-# ...
-
 @app.get("/", response_class=HTMLResponse)
 async def read_item():
     return """
@@ -107,10 +106,16 @@ async def read_item():
     </html>
     """
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+static_path = os.path.join(Path(__file__).resolve().parent, "static")
+app.mount("/static", StaticFiles(directory=static_path), name="static")
 
 templates = Jinja2Templates(directory="templates")
 
 @app.get("/api/docs", include_in_schema=False)
 async def get_documentation():
     return templates.TemplateResponse("documentation.html", {"request": "localhost:8000"})
+
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)

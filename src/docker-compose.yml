@@ -1,7 +1,26 @@
 version: "3.10.6"
-
 services:
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - "5000:8000"
+      - "8000:8000"
+    volumes:
+      - ./static:/app/static
+    command: uvicorn main:app --host 0.0.0.0 --port 8000
+    depends_on:
+      - redis
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+    networks:
+      - app-network
+
+  redis:
+    image: redis:latest
+    networks:
+      - app-network
+
+networks:
+  app-network:
+

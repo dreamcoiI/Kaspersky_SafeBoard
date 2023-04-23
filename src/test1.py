@@ -65,6 +65,7 @@ def get_process_result():
 
 @app.post("/api/{process_name}/start")
 def start(process_name: str):
+    process_name=str(process_name)
     if process_name != "word_count":
         raise HTTPException(status_code=404, detail="Process not found")
     start_process()
@@ -73,6 +74,7 @@ def start(process_name: str):
 
 @app.post("/api/{process_name}/stop")
 def stop(process_name: str):
+    process_name=str(process_name)
     if process_name != "word_count":
         raise HTTPException(status_code=404, detail="Process not found")
     stop_process()
@@ -102,6 +104,8 @@ async def read_item():
         </head>
         <body>
             <h1>Welcome to the FastAPI app</h1>
+            <h2>Please read documentation for using with API</h2>
+            <h3>Ling on documentation http://localhost:8000/docs</h3>
         </body>
     </html>
     """
